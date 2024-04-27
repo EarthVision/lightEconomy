@@ -5,6 +5,7 @@ import de.lightplugins.economy.enums.PersistentDataPaths;
 import de.lightplugins.economy.master.Main;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Item;
@@ -75,6 +76,11 @@ public class ClaimVoucher implements Listener {
                                 .replace("#currency#", Main.util.getCurrency(amount)));
 
                         event.setCancelled(true);
+
+                        // After the successful transaction
+                        Location playerLocation = player.getLocation();
+                        VoucherClaimedEvent voucherEvent = new VoucherClaimedEvent(player, amount, playerLocation);
+                        Bukkit.getPluginManager().callEvent(voucherEvent);
 
                         if(itemStack.getAmount() > 1) {
                             itemStack.setAmount(itemStack.getAmount() - 1);
